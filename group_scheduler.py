@@ -1,5 +1,11 @@
-from typing import Dict, List, Tuple, Any 
+"""
+Algorithm 2: Matching Group Schedules
+Names: Ananya Karthi, Ricardo Pena, Steven Solorzano, Ngoc Chung Tran
 
+
+"""
+from typing import Dict, List, Tuple, Any 
+import sys
 ###CONVERSION FUNCTIONS###
 def to_minute(t: str) -> int: #t means time
     """
