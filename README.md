@@ -1,5 +1,5 @@
 # Group-4-CPSC-335-Project-1
-# CPSC 335 - Project 1: Algorithm Design and Analysis
+# Project 1: Algorithm Design and Analysis
 
 **Group 4 Members:**
 - Ananya Karthi (akarthi@csu.fullerton.edu)
@@ -57,8 +57,8 @@ Find common available time slots for multiple group members given their busy sch
 ```
 project1/
 ├── README.md
-├── alternating_disks.py
-├── group_scheduler.py
+├── alternating_disks.py      # sort_disks() function and interactive input
+├── group_scheduler.py        # meeting_coordinator_dict() function
 ├── test_alternating_disks.py
 ├── test_group_scheduler.py
 └── report.pdf
@@ -69,37 +69,43 @@ project1/
 ### Alternating Disk Problem
 
 ```python
-from alternating_disks import AlternatingDisks
+from alternating_disks import sort_disks, make_alternating
 
 # Example usage
 n = 4  # Number of disk pairs
-disks = ['L', 'D', 'L', 'D', 'L', 'D', 'L', 'D']  # Initial alternating pattern
+disks = make_alternating(n)  # Creates ['L', 'D', 'L', 'D', 'L', 'D', 'L', 'D']
 
-result_disks, num_swaps = AlternatingDisks(n, disks)
+result_disks, num_swaps = sort_disks(n, disks)
 print(f"Final arrangement: {result_disks}")
 print(f"Number of swaps: {num_swaps}")
+
+# Interactive mode
+# Run the file directly to enter n interactively:
+# python alternating_disks.py
 ```
 
 ### Group Schedule Matching
 
 ```python
-from group_scheduler import meetingCoordinator
+from group_scheduler import meeting_coordinator_dict
 
 # Example usage
-schedules = {
+schedules_by_member = {
     'person1': [['7:00', '8:30'], ['12:00', '13:00'], ['16:00', '18:00']],
     'person2': [['9:00', '10:30'], ['12:20', '14:00'], ['14:30', '15:00'], ['16:00', '17:00']]
 }
 
-active_times = {
+active_by_member = {
     'person1': ['9:00', '19:00'],
     'person2': ['9:00', '18:30']
 }
 
-duration = 30  # minutes
+meeting_duration = 30  # minutes
 
-available_slots = meetingCoordinator(schedules, active_times, duration)
-print(f"Available meeting times: {available_slots}")
+result = meeting_coordinator_dict(schedules_by_member, active_by_member, meeting_duration)
+print(f"Members: {result['members']}")
+print(f"Available meeting times: {result['common_meeting_windows']}")
+print(f"Individual free times: {result['free_by_member']}")
 ```
 
 ## Testing
@@ -126,14 +132,19 @@ python test_group_scheduler.py
 - Uses bidirectional bubble sort for optimal swapping
 - Each round consists of left-to-right and right-to-left passes
 - Terminates when no swaps occur in a complete round
+- Includes detailed step-by-step tracing of all swaps
+- Auto-generates alternating disk pattern as required
+- Interactive input validation for number of disk pairs
 - Theoretical minimum swaps: n² for worst-case input
 
 ### Group Schedule Algorithm
-- Converts time strings to minutes for efficient computation
+- Converts time strings (HH:MM) to minutes for efficient computation
 - Merges overlapping intervals to reduce complexity
 - Uses two-pointer technique for interval intersections
 - Supports variable number of group members
-- Returns results in sorted order
+- Returns comprehensive results including individual free times
+- Handles edge cases like invalid time ranges and member mismatches
+- Uses closed intervals (inclusive endpoints) throughout
 
 ## Performance Characteristics
 
@@ -149,9 +160,17 @@ python test_group_scheduler.py
 
 ## Known Limitations
 
-1. **Alternating Disks:** Algorithm assumes input follows the specified alternating pattern
-2. **Group Scheduler:** Assumes valid time format (HH:MM) and logical time ranges
-3. Both algorithms prioritize correctness over micro-optimizations
+1. **Alternating Disks:** 
+   - Algorithm assumes input follows the specified alternating pattern (auto-generated)
+   - Requires valid integer input ≥ 1 for number of disk pairs
+   - Extensive tracing output may impact performance for large inputs
+
+2. **Group Scheduler:** 
+   - Assumes valid time format (HH:MM) and logical time ranges
+   - Requires matching member keys in both schedule and active dictionaries
+   - Uses closed intervals which may need adjustment for specific use cases
+
+3. Both algorithms prioritize correctness and educational clarity over micro-optimizations
 
 ## Future Enhancements
 
